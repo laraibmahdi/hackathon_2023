@@ -7,20 +7,22 @@ public class Main {
 
         Bank scotia = new Bank("Scotia_Bank", "alsjkdads", "2130123", 123);
         System.out.println("Are you a customer ?");
-        Scanner input = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
+        String input = sc.nextLine();
+
+        String ID = "";
+        String password = "";
 
         if(input.equals("yes")) { // he is a customer
             System.out.println("Enter your username");
-            Scanner userName = new Scanner(System.in);
-            if(scotia.isCustomer(String.valueOf(userName))){
+            ID = sc.nextLine();
+            if(scotia.isCustomer(ID)){
                 System.out.println("Enter your password");
-                Scanner userPass = new Scanner(System.in);
+                password = sc.nextLine();
             }
             // decrypt the account info
         } else { // he is not a customer
-            String name, ID, password, address, phone_Number;
-
-            Scanner sc = new Scanner(System.in);
+            String name, address, phone_Number;
 
             System.out.println("Enter your name :");
             name = sc.nextLine();
