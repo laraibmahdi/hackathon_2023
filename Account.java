@@ -44,6 +44,13 @@ class Account {
             return false;
  
     }
+            
+    public String toString(){
+        
+        String s = "";
+        s+= customerName + " " + address + " " + phoneNumber + " " + balance;
+        return s;
+    }
 
     //changePassword method
     private void changePassword(String oldPassword, String newPassword){
