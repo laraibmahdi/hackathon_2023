@@ -48,7 +48,7 @@ class Account {
     public String toString(){
         
         String s = "";
-        s+= customerName + " " + address + " " + phoneNumber + " " + balance;
+        s+= customerName + " " + address + " " + phoneNumber + " " + holderBalance;
         return s;
     }
 
