@@ -1,54 +1,84 @@
 import com.company.Encrypter;
 
+import java.io.*;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
 
-        Bank scotia = new Bank("Scotia_Bank", "alsjkdads", "2130123", 123);
+        Bank scotia = new Bank("klsad", "alsjkdads", "2130123", 123);
         System.out.println("Are you a customer ?");
         Scanner sc = new Scanner(System.in);
         String input = sc.nextLine();
 
-        String ID = "";
-        String password = "";
+        // creating objects using a file
+        try {
+            File filename = new File("text.txt");
+            Scanner filereader = new Scanner(filename);
+            String ID = "", name = "", password = "", address = "", phone_Number = "";
+            int counter = 0;
 
-        if(input.equals("yes")) { // he is a customer
-            System.out.println("Enter your username");
-            ID = sc.nextLine();
-            if(scotia.isCustomer(ID)){
-                System.out.println("Enter your password");
-                password = sc.nextLine();
+            while (filereader.hasNextLine()) {
+                String line = filereader.nextLine();
+                if (line.isBlank()){
+                    counter = 0;
+                } else {
+                    line = Encrypter.AES.decrypt(line,"scotia");
+                    counter ++;
+                }
+                if(counter == 0){
+                    ID = line;
+                } else if (counter == 1){
+                    name = line;
+                } else if (counter == 2){
+                    password = line;
+                } else if (counter == 3){
+                    address = line;
+                } else {
+                    phone_Number = line;
+                    System.out.println("he");
+                    scotia.addAccount(new Account(name, ID, password, address, phone_Number));
+                }
             }
-            // decrypt the account info
-        } else { // he is not a customer
-            String name, address, phone_Number;
 
-            System.out.println("Enter your name :");
-            name = sc.nextLine();
-            System.out.println("Enter your ID :");
-            ID = sc.nextLine();
-            System.out.println("Enter your password :");
-            password = sc.nextLine();
-            System.out.println("Enter your address :");
-            address = sc.nextLine();
-            System.out.println("Enter your phone_Number :");
-            phone_Number = sc.nextLine();
+            filereader.close();
+            if (input.equals("yes")) { // he is a customer
+                System.out.println("Enter your username");
+                ID = sc.nextLine();
+                if (scotia.isCustomer(ID)) {
+                    System.out.println("Enter your password");
+                    password = sc.nextLine();
+                    if(scotia.getAccount(ID).checkPassword(password)){ // we are getting account id here
+                        System.out.println(scotia.getAccount(ID).toString());
+                    }
+                }
+            } else { // he is not a customer
 
-            Account newAccount =  new Account(name, ID, password, address, phone_Number);
+                System.out.println("Enter your name :");
+                name = sc.nextLine();
+                System.out.println("Enter your ID :");
+                ID = sc.nextLine();
+                System.out.println("Enter your password :");
+                password = sc.nextLine();
+                System.out.println("Enter your address :");
+                address = sc.nextLine();
+                System.out.println("Enter your phone_Number :");
+                phone_Number = sc.nextLine();
 
+                final String secretKey = "scotia";
+                String id = Encrypter.AES.encrypt(ID, secretKey);
+                String Password = Encrypter.AES.encrypt(password, secretKey);
+                String Address = Encrypter.AES.encrypt(address, secretKey);
+                String Phone_number = Encrypter.AES.encrypt(phone_Number, secretKey);
+                // encrypt the account info and add it into a text file
 
-            final String secretKey = "scotia";
-            String id= Encrypter.AES.encrypt(ID,secretKey);
-            String Password= Encrypter.AES.encrypt(password,secretKey);
-            String Address= Encrypter.AES.encrypt(address,secretKey);
-            String Phone_number= Encrypter.AES.encrypt(phone_Number,secretKey);
-            System.out.println(id+"\n"+Password+"\n"+Address+"\n"+Phone_number);
+                FileWriter myWriter = new FileWriter("filename.txt");
+                myWriter.write(id + "\n" + name + "\n" + Password + "\n" + Address + "\n"
+                        + Phone_number + "\n");
+                myWriter.close();
+            }
+        } catch(Exception e){
+            System.out.println(e.getMessage());
         }
-        // encrypt the account info and add it into a text file
-
-
-
-
     }
 }
