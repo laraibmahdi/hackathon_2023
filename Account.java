@@ -36,6 +36,14 @@ class Account {
     private void setPassword(String password){
         holderPassword = password;
     }
+    
+    public boolean checkPassword(String pass){
+        if (pass.equals(this.holderPassword){
+            return true;
+        }
+            return false;
+ 
+    }
 
     //changePassword method
     private void changePassword(String oldPassword, String newPassword){
