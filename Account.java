@@ -1,13 +1,26 @@
-class Account extends Customer{
+class Account {
     //Fields
-        String holderPassword = " ";
-        double holderBalance = 0.0;
+        private String customerName; 
+        private String id;
+        private String address;
+        private String phoneNumber;
+        String holderPassword;
+        double holderBalance;
+
     //Constructor
-    Account(String holderName,String holderPassword, double holderBalance, String holderAddress, String holderPhoneNumber){
-        super(holderName,holderAddress,holderPhoneNumber);
+    Account(String holderName,String id, String holderPassword, double holderBalance, String holderAddress, String holderPhoneNumber){
+        this.customerName = holderName;
+        this.id = id;
+        this.address = holderAddress;
+        this.phoneNumber = holderPhoneNumber;
         this.holderPassword = holderPassword;
-        this.holderBalance = holderBalance;
+        this.holderBalance = 0.0;
     }
+
+    public String getUserID(){
+        return this.id;
+    }
+
     //deposit method
     private void deposit(double amount){
         this.holderBalance += amount;
