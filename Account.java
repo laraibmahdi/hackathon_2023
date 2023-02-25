@@ -1,12 +1,10 @@
 class Account extends Customer{
     //Fields
-        String holderName = " ";
         String holderPassword = " ";
         double holderBalance = 0.0;
     //Constructor
     Account(String holderName,String holderPassword, double holderBalance, String holderAddress, String holderPhoneNumber){
         super(holderName,holderAddress,holderPhoneNumber);
-        this.holderName = holderName;
         this.holderPassword = holderPassword;
         this.holderBalance = holderBalance;
     }
