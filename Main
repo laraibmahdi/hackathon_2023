@@ -20,7 +20,7 @@ public class Main {
         } else { // he is not a customer
             String name, ID, password, address;
             int phone_Number;
-            
+
             Scanner sc = new Scanner(System.in);
 
             System.out.println("Enter your name :");
@@ -33,7 +33,7 @@ public class Main {
             address = sc.nextLine();
             System.out.println("Enter your phone_Number :");
             phone_Number = sc.nextInt();
-            
+
             Account newAccount =  new Account(name, ID, password, address, phone_Number);
         }
         // encrypt the account info and add it into a text file
