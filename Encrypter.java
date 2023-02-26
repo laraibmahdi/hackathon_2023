@@ -1,3 +1,5 @@
+package com.company;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -8,18 +10,6 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Encrypter {
-
-    //public static void main(String[] args) {
-      //  final String secretKey = "ssshhhhhhhhhhh!!!!";
-
-       // String originalString = "";
-        //String encryptedString = AES.encrypt(originalString, secretKey) ;
-        //String decryptedString = AES.decrypt(encryptedString, secretKey) ;
-
-        //System.out.println(originalString);
-        //System.out.println(encryptedString);
-        //System.out.println(decryptedString);
-    //}
 
     public class AES {
 
