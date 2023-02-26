@@ -1,15 +1,15 @@
 import com.company.Encrypter;
 
-import java.io.*;
+import javax.naming.Name;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        Bank scotia = new Bank("klsad", "alsjkdads", "2130123", 123);
-        System.out.println("Are you a customer ?");
-        Scanner sc = new Scanner(System.in);
-        String input = sc.nextLine();
+        Bank scotia = new Bank("Scotia_Bank", "alsjkdads", "2130123", 123);
 
         // creating objects using a file
         try {
@@ -20,7 +20,8 @@ public class Main {
 
             while (filereader.hasNextLine()) {
                 String line = filereader.nextLine();
-                line = Encrypter.AES.decrypt(line,"scotia");
+                line = Encrypter.decrypt(line,"scotia");
+                System.out.println(line);
                 if (counter == 5){
                     counter = 0;
                 }
@@ -39,47 +40,111 @@ public class Main {
                 counter++;
                 }
 
-                filereader.close();
-                if (input.equals("yes")) { // he is a customer
-                    System.out.println("Enter your username");
-                    ID = sc.nextLine();
-                    if (scotia.isCustomer(ID)) {
-                        System.out.println("Enter your password");
-                        password = sc.nextLine();
-                        if(scotia.getAccount(ID).checkPassword(password)){ // we are getting account id here
-                            System.out.println(scotia.getAccount(ID).toString());
-                        }
-                    }
-                } else { // he is not a customer
+            filereader.close();
+            System.out.println("Are you a customer ?");
+            Scanner sc = new Scanner(System.in);
+            String input = sc.nextLine();
 
-                    System.out.println("Enter your name :");
-                    name = sc.nextLine();
-                    System.out.println("Enter your ID :");
-                    ID = sc.nextLine();
-                    System.out.println("Enter your password :");
+            if (input.equals("yes")) { // he is a customer
+                System.out.println("Enter your username");
+                ID = sc.nextLine();
+                if (scotia.isCustomer(ID)) {
+                    System.out.println("Enter your password");
                     password = sc.nextLine();
-                    System.out.println("Enter your address :");
-                    address = sc.nextLine();
-                    System.out.println("Enter your phone_Number :");
-                    phone_Number = sc.nextLine();
+                    if (scotia.getAccount(ID).checkPassword(password)) {
+                        System.out.println(scotia.getAccount(ID).toString());
 
-                    final String secretKey = "scotia";
-                    String id = Encrypter.AES.encrypt(ID, secretKey);
-                    String NAME = Encrypter.AES.encrypt(name, secretKey);
-                    String Password = Encrypter.AES.encrypt(password, secretKey);
-                    String Address = Encrypter.AES.encrypt(address, secretKey);
-                    String Phone_number = Encrypter.AES.encrypt(phone_Number, secretKey);
-                    // encrypt the account info and add it into a text file
+                        int option;
+                        while (true) {
+                            System.out.println("1. View account balance");
+                            System.out.println("2. Deposit value");
+                            System.out.println("3. Withdraw value");
+                            System.out.println("4. Change account password");
+                            System.out.println("0. Quit");
+                            System.out.print("Please choose an option: ");
+                            option = sc.nextInt();
 
+                            if (option == 0)
+                                break;
+                            switch (option) {
+                                case 1:// view account balance
+                                    System.out.println("Account balance: " + scotia.getAccount(ID).holderBalance);
+                                    System.out.println("\n");
+                                    break;
+                                case 2:// deposit
+                                    double depositValue;
+                                    System.out.println("Enter deposit amount: ");
+                                    depositValue = sc.nextDouble();
+                                    scotia.getAccount(ID).deposit(depositValue);
+                                    System.out.println("new account balance: " + scotia.getAccount(ID).holderBalance);
+                                    System.out.println("\n");
+                                    break;
+                                case 3:// withdraw
+                                    double withdrawValue;
+                                    System.out.println("Enter withdraw amount: ");
+                                    withdrawValue = sc.nextDouble();
+                                    scotia.getAccount(ID).withdraw(withdrawValue);
+                                    System.out.println("new account balance: " + scotia.getAccount(ID).holderBalance);
+                                    System.out.println("\n");
+                                    break;
+                                case 4:// Change password
+                                    String currentpassWord = " ";
+                                    String newPassword = " ";
+                                    Scanner newScan = new Scanner(System.in);
 
-
-                    FileWriter myWriter = new FileWriter("filename.txt", true);
-                    myWriter.write(id + "\n" + NAME + "\n" + Password + "\n" + Address + "\n"
-                            + Phone_number + "\n");
-                    myWriter.close();
+                                    System.out.println("Please type in your current password: ");
+                                    currentpassWord = newScan.nextLine();
+                                    if (!currentpassWord.equals(password)) {
+                                        System.out.println("Incorrect password input!");
+                                        continue;
+                                    }
+                                    System.out.println("Please type in your new password: ");
+                                    newPassword = newScan.nextLine();
+                                    while (!scotia.getAccount(ID).changePassword(newPassword)) {
+                                        System.out.println("Please type in your new password: ");
+                                        newPassword = newScan.nextLine();
+                                    }
+                                    password = newPassword;
+                                    break;
+                            }
+                        }
+                    } else {
+                        System.out.println("Wrong Password");
+                    }
                 }
-            } catch(Exception e){
-                System.out.println(e.getMessage());
+            } else { // he is not a customer
+                String NAME, ADDRESS, PHONE_NUMBER, id, PASSWORD;
+                System.out.println("Enter your name :");
+                NAME = sc.nextLine();
+                System.out.println("Enter your ID :");
+                id = sc.nextLine();
+                System.out.println("Enter your password :");
+                PASSWORD = sc.nextLine();
+                System.out.println("Enter your address :");
+                ADDRESS = sc.nextLine();
+                System.out.println("Enter your phone_Number :");
+                PHONE_NUMBER = sc.nextLine();
+
+                Account newAccount = new Account(NAME, id, PASSWORD, ADDRESS, PHONE_NUMBER);
+                scotia.addAccount(newAccount);
+
+
+
+                final String secretKey = "scotia";
+                String iD = Encrypter.encrypt(ID, secretKey);
+                String NAme = Encrypter.encrypt(name, secretKey);
+                String PAssword = Encrypter.encrypt(password, secretKey);
+                String ADdress = Encrypter.encrypt(address, secretKey);
+                String PHone_number = Encrypter.encrypt(phone_Number, secretKey);
+
+
+            FileWriter myWriter = new FileWriter("filename.txt", true);
+            myWriter.write(iD + "\n" + NAme + "\n" + PAssword + "\n" + ADdress + "\n"
+                    + PHone_number + "\n");
+            myWriter.close();
             }
+        }catch (Exception e ){
+
         }
     }
+}
